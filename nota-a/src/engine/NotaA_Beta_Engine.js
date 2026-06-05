@@ -570,11 +570,11 @@ export class RateLimiter {
 
 export class NotaAClient {
   constructor({ rateLimiter, apiKey = null } = {}) {
-    this.model    = 'gemini-2.0-flash';
-    this.baseUrl  = 'https://generativelanguage.googleapis.com/v1beta/models';
-    this.apiKey   = apiKey;
-    this.rateLimiter = rateLimiter || new RateLimiter();
-  }
+  this.model    = 'gemini-2.0-flash';
+  this.baseUrl  = 'https://generativelanguage.googleapis.com/v1beta/models';
+  this.apiKey   = apiKey || import.meta.env.VITE_GEMINI_API_KEY;
+  this.rateLimiter = rateLimiter || new RateLimiter();
+}
 
   // Monta o endpoint com a key na URL (padrão Gemini)
   _endpoint() {

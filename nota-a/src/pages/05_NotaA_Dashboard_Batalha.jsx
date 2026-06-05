@@ -447,7 +447,7 @@ function DashboardModule() {
         <div style={{ display: "flex", gap: 4, marginBottom: 20, background: C.surface, padding: 4, borderRadius: 12, border: `1px solid ${C.border}` }}>
           {[["turma", "👥 Turma"], ["areas", "📊 Por Área"], ["aluno", "🎯 Aluno"]].map(([id, label]) => (
             <button key={id} onClick={() => setTab(id)} style={{
-              flex: 1, padding: "8px 12px", borderRadius: 9, border: "none", cursor: "pointer",
+              flex: 1, padding: "8px 12px", borderRadius: 9, cursor: "pointer",
               background: tab === id ? `linear-gradient(135deg, ${C.primary}22, ${C.secondary}22)` : "transparent",
               color: tab === id ? C.primary : C.muted,
               fontSize: 13, fontWeight: tab === id ? 700 : 500,

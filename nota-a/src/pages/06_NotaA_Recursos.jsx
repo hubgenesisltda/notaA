@@ -42,7 +42,7 @@ function Previsao(){
         <div style={{fontSize:10,fontWeight:700,color:C.muted,marginBottom:10,letterSpacing:1,fontFamily:"'Syne',sans-serif"}}>HORAS EXTRAS/SEMANA</div>
         {Object.entries(horas).map(([k,v])=><div key={k} style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}><div style={{fontSize:10,color:C.text,width:72}}>{AREA_LBL[k]}</div><input type="range" min={0} max={10} value={v} onChange={e=>setHoras(h=>({...h,[k]:+e.target.value}))} style={{flex:1,accentColor:AREA_COR[k]}}/><div style={{fontFamily:"'Syne',sans-serif",fontSize:11,fontWeight:800,color:AREA_COR[k],width:22,textAlign:"right"}}>{v}h</div></div>)}
       </div>
-      <button onClick={calcular} disabled={loading} style={{width:"100%",padding:"14px",borderRadius:12,border:"none",background:loading?C.border:G.primary,cursor:loading?"not-allowed":"pointer",fontSize:14,fontWeight:700,color:loading?C.muted:"#fff",fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+      <button onClick={calcular} disabled={loading} style={{width:"100%",padding:"14px",borderRadius:12,background:loading?C.border:G.primary,cursor:loading?"not-allowed":"pointer",fontSize:14,fontWeight:700,color:loading?C.muted:"#fff",fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
         {loading?<><Spin/>Calculando...</>:"🔮 Gerar Previsão com IA"}
       </button>
       {res&&<div className="fu" style={{marginTop:14}}>
@@ -118,7 +118,7 @@ function Narrativa(){
       <div style={{background:C.card,borderRadius:13,border:`1px solid ${C.border}`,padding:"14px",marginBottom:12}}>
         <div style={{fontSize:10,fontWeight:700,color:C.muted,marginBottom:6,letterSpacing:1,fontFamily:"'Syne',sans-serif"}}>QUAL É O SEU SONHO?</div>
         <input value={sonho} onChange={e=>setSonho(e.target.value)} placeholder="Ex: médica, engenheiro aeronáutico, jornalista..." style={{width:"100%",padding:"12px 13px",background:C.surface,border:`1.5px solid ${sonho?C.pink:C.border}`,borderRadius:10,color:C.text,fontSize:13,outline:"none",marginBottom:12,boxSizing:"border-box",transition:"border-color .2s"}} onFocus={e=>e.target.style.borderColor=C.pink} onBlur={e=>e.target.style.borderColor=sonho?C.pink:C.border}/>
-        <button onClick={gerar} disabled={loading||!sonho.trim()} style={{width:"100%",padding:"13px",borderRadius:11,border:"none",background:loading||!sonho.trim()?C.border:G.accent,cursor:loading||!sonho.trim()?"not-allowed":"pointer",fontSize:13,fontWeight:700,color:loading||!sonho.trim()?C.muted:"#fff",fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+        <button onClick={gerar} disabled={loading||!sonho.trim()} style={{width:"100%",padding:"13px",borderRadius:11,background:loading||!sonho.trim()?C.border:G.accent,cursor:loading||!sonho.trim()?"not-allowed":"pointer",fontSize:13,fontWeight:700,color:loading||!sonho.trim()?C.muted:"#fff",fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
           {loading?<><Spin/>Criando narrativa...</>:"✨ Criar Minha Narrativa"}
         </button>
       </div>
@@ -206,7 +206,7 @@ function APIEdu(){
             <span style={{padding:"9px 10px",background:`${C.green}22`,color:C.green,borderRadius:8,fontSize:9,fontWeight:900,fontFamily:"monospace",whiteSpace:"nowrap"}}>GET</span>
             <input value={ep} onChange={e=>setEp(e.target.value)} style={{flex:1,padding:"9px 11px",background:C.surface,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11,outline:"none",fontFamily:"monospace"}}/>
           </div>
-          <button onClick={testar} disabled={testing} style={{width:"100%",padding:"11px",borderRadius:9,border:"none",background:testing?C.border:G.primary,cursor:testing?"not-allowed":"pointer",fontSize:12,fontWeight:700,color:testing?C.muted:"#fff",fontFamily:"'Syne',sans-serif",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>{testing?<><Spin/>Testando...</>:"▶ Enviar Requisição"}</button>
+          <button onClick={testar} disabled={testing} style={{width:"100%",padding:"11px",borderRadius:9,background:testing?C.border:G.primary,cursor:testing?"not-allowed":"pointer",fontSize:12,fontWeight:700,color:testing?C.muted:"#fff",fontFamily:"'Syne',sans-serif",marginTop:10,display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>{testing?<><Spin/>Testando...</>:"▶ Enviar Requisição"}</button>
         </div>
         {testR&&<div className="fu" style={{background:C.surface,borderRadius:12,border:`1px solid ${C.border}`,padding:"12px 13px"}}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:7}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:10,fontWeight:700,color:C.muted,letterSpacing:1}}>RESPOSTA</div><Pill color={C.green} style={{fontSize:9}}>✓ {testR.status} OK</Pill></div><div style={{background:"#000",borderRadius:7,padding:"10px",fontSize:10,fontFamily:"monospace",color:"#00FF88",lineHeight:1.5,overflowX:"auto",maxHeight:160,overflow:"auto"}}>{JSON.stringify(testR.data,null,2)}</div></div>}
       </div>}
@@ -253,7 +253,7 @@ function Pais(){
           {["semanal","quinzenal","mensal"].map(f=><button key={f} onClick={()=>setFreq(f)} style={{flex:1,padding:"7px",borderRadius:8,border:`1.5px solid ${freq===f?C.green:C.border}`,background:freq===f?`${C.green}18`:"transparent",color:freq===f?C.green:C.muted,fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"'Syne',sans-serif",textTransform:"capitalize"}}>{f}</button>)}
         </div>
         {!enviado
-          ?<button onClick={()=>email.includes("@")&&setEnviado(true)} disabled={!email.includes("@")} style={{width:"100%",padding:"12px",borderRadius:10,border:"none",background:!email.includes("@")?C.border:G.primary,cursor:!email.includes("@")?"not-allowed":"pointer",fontSize:13,fontWeight:700,color:!email.includes("@")?C.muted:"#fff",fontFamily:"'Syne',sans-serif"}}>📧 Ativar Relatório {freq}</button>
+          ?<button onClick={()=>email.includes("@")&&setEnviado(true)} disabled={!email.includes("@")} style={{width:"100%",padding:"12px",borderRadius:10,background:!email.includes("@")?C.border:G.primary,cursor:!email.includes("@")?"not-allowed":"pointer",fontSize:13,fontWeight:700,color:!email.includes("@")?C.muted:"#fff",fontFamily:"'Syne',sans-serif"}}>📧 Ativar Relatório {freq}</button>
           :<div style={{textAlign:"center",padding:"11px",background:`${C.green}15`,borderRadius:9,border:`1px solid ${C.green}44`}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:700,color:C.green}}>✅ Relatório ativado!</div><div style={{fontSize:10,color:C.muted,marginTop:2}}>Próximo envio: {freq==="semanal"?"próxima segunda":freq==="quinzenal"?"em 2 semanas":"no 1º do mês"}</div></div>}
       </div>
       <div style={{background:`${C.green}0D`,border:`1px solid ${C.green}33`,borderRadius:12,padding:"13px",textAlign:"center"}}><div style={{fontSize:22,marginBottom:4}}>💬</div><div style={{fontFamily:"'Syne',sans-serif",fontSize:12,fontWeight:700,color:C.green,marginBottom:3}}>Também via WhatsApp</div><div style={{fontSize:10,color:C.muted,marginBottom:8}}>Atualizações direto no celular da família</div><button style={{padding:"8px 16px",borderRadius:9,border:"none",background:C.green,cursor:"pointer",fontSize:11,fontWeight:700,color:"#fff",fontFamily:"'Syne',sans-serif"}}>Conectar WhatsApp</button></div>
@@ -270,7 +270,7 @@ function PerfilModule(){
   return(
     <div>
       <div style={{textAlign:"center",marginBottom:18}}>
-        <div style={{width:66,height:66,borderRadius:"50%",margin:"0 auto 10px",background:G.primary,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:900,color:"#fff",fontFamily:"'Syne',sans-serif"}}style={{width:66,height:66,borderRadius:"50%",margin:"0 auto 10px",background:G.primary,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:900,color:"#fff",fontFamily:"'Syne',sans-serif",boxShadow:`0 0 20px ${C.cyan}44`}}>E</div>
+        <div style={{width:66,height:66,borderRadius:"50%",margin:"0 auto 10px",background:G.primary,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:900,color:"#fff",fontFamily:"'Syne',sans-serif",boxShadow:`0 0 20px ${C.cyan}44`}}>E</div>
         <div style={{fontFamily:"'Syne',sans-serif",fontSize:19,fontWeight:900}}>Estudante</div>
         <div style={{fontSize:11,color:C.muted,marginTop:2}}>Estudante ENEM</div>
         <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:10,flexWrap:"wrap"}}><Pill color={C.cyan}>⚡ Nível 3</Pill><Pill color={C.amber}>🔥 3 dias</Pill><Pill color={C.green}>💰 620 XP</Pill></div>
