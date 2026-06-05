@@ -9,6 +9,7 @@ import RecursosAvancados from './pages/06_NotaA_Recursos.jsx'
 import AdminPanel from './pages/07_NotaA_Admin.jsx'
 import PortalEscola from './pages/08_NotaA_Escola.jsx'
 import ModuloEstudante from './pages/09_NotaA_Estudante.jsx'
+import NotaAAuth from './pages/NotaA_Beta_Auth.jsx'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/escola" element={<PortalEscola />} />
         <Route path="/estudante" element={<ModuloEstudante />} />
+        <Route path="/login" element={<NotaAAuth />} />
       </Routes>
   )
 }
