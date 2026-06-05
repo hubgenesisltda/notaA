@@ -76,7 +76,7 @@ function OCard({ icon, label, desc, selected, onClick, color, row }) {
     }}>
       <span style={{ fontSize: row ? 22 : 26, flexShrink: 0 }}>{icon}</span>
       <div style={{ flex: row ? 1 : "unset" }}>
-        <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 13, fontWeight: 700, color: selected ? color : C.text }}>{label}</div>
+        <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 13, fontWeight: 700, }}>{label}</div>
         {desc && <div style={{ fontSize: 11, color: C.muted, marginTop: 2, lineHeight: 1.4 }}>{desc}</div>}
       </div>
       {row && selected && <span style={{ color, fontSize: 16, flexShrink: 0 }}>✓</span>}

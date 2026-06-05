@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import {Routes, Route } from 'react-router-dom'
 import Landing from './pages/01_NotaA_Landing.jsx'
 import Onboarding from './pages/02_NotaA_Onboarding.jsx'
 import QuizBatalha from './pages/03_NotaA_Quiz_Batalha.jsx'
@@ -12,8 +12,7 @@ import ModuloEstudante from './pages/09_NotaA_Estudante.jsx'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/quiz" element={<QuizBatalha />} />
@@ -24,7 +23,6 @@ function App() {
         <Route path="/escola" element={<PortalEscola />} />
         <Route path="/estudante" element={<ModuloEstudante />} />
       </Routes>
-    </BrowserRouter>
   )
 }
 

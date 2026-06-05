@@ -126,7 +126,7 @@ function QuizModule() {
             style={{width:"100%",padding:"12px 14px",background:C.card,border:`1.5px solid ${tema?C.cyan:C.border}`,borderRadius:11,color:C.text,fontSize:14,outline:"none",resize:"none",marginBottom:10,boxSizing:"border-box",transition:"border-color .2s"}}
             onFocus={e=>e.target.style.borderColor=C.cyan} onBlur={e=>e.target.style.borderColor=tema?C.cyan:C.border}
           />
-          <button onClick={gerar} disabled={loading||!tema.trim()} style={{width:"100%",padding:"14px",borderRadius:12,border:"none",background:loading||!tema.trim()?C.border:G.primary,cursor:loading||!tema.trim()?"not-allowed":"pointer",fontSize:14,fontWeight:700,color:loading||!tema.trim()?C.muted:"#fff",fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+          <button onClick={gerar} disabled={loading||!tema.trim()} style={{width:"100%",padding:"14px",borderRadius:12,background:loading||!tema.trim()?C.border:G.primary,cursor:loading||!tema.trim()?"not-allowed":"pointer",fontSize:14,fontWeight:700,color:loading||!tema.trim()?C.muted:"#fff",fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
             {loading ? <><Spin size={16}/>Gerando questão...</> : "✨ Gerar com IA"}
           </button>
         </div>
