@@ -3,20 +3,20 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-if (!process.env.SUPABASE_URL)          throw new Error('SUPABASE_URL não definida');
-if (!process.env.SUPABASE_SERVICE_ROLE) throw new Error('SUPABASE_SERVICE_ROLE não definida');
+if (!import.meta.env.SUPABASE_URL)          throw new Error('SUPABASE_URL não definida');
+if (!import.meta.env.SUPABASE_SERVICE_ROLE) throw new Error('SUPABASE_SERVICE_ROLE não definida');
 
 // Service role ignora RLS — usado apenas server-side para registrar uso e verificar limites
 export const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE,
+  import.meta.env.SUPABASE_URL,
+  import.meta.env.SUPABASE_SERVICE_ROLE,
   { auth: { persistSession: false } }
 );
 
 // Cliente anon para validar JWT do usuário
 export const supabaseAnon = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY,
+  import.meta.env.SUPABASE_URL,
+  import.meta.env.SUPABASE_ANON_KEY,
   { auth: { persistSession: false } }
 );
 

@@ -14,7 +14,7 @@ import NotaAAuth from './pages/NotaA_Beta_Auth.jsx'
 function App() {
   return (
     <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Landing onLogin="/login" />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/quiz" element={<QuizBatalha />} />
         <Route path="/estudo" element={<ModuloEstudo />} />
