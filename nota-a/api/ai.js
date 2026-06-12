@@ -40,7 +40,7 @@ export default async function handler(req) {
     return json({ error: 'Método não permitido.' }, 405, origin);
   }
 
-  if (!process.env.GEMINI_API_KEY) {
+  if (!import.meta.env.GEMINI_API_KEY) {
     return json({ error: 'GEMINI_API_KEY não configurada no servidor.' }, 500, origin);
   }
 

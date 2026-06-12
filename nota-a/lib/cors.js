@@ -7,7 +7,7 @@ const ALLOWED_ORIGINS = [
   'https://www.notaa.com.br',
   'https://app.notaa.com.br',
   // Adicione previews da Vercel automaticamente:
-  ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
+  ...(import.meta.env.VERCEL_URL ? [`https://${import.meta.env.VERCEL_URL}`] : []),
 ];
 
 export function corsHeaders(origin) {
