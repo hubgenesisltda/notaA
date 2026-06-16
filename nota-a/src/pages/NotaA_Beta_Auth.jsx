@@ -30,7 +30,7 @@ button,input,select,textarea{font-family:inherit;cursor:pointer;border:none;back
 `;
 
 // ── Supabase client ───────────────────────────────────────────────
-console.log('[DEBUG ENV]', import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_ANON_KEY
