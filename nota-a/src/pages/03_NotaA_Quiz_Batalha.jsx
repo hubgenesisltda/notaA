@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import NavBar from "../components/NavBar.jsx";
+import { callAI } from "../lib/aiClient.js";
 
 const C = {
   bg:"#03050E", surface:"#070B18", card:"#0A0F20", border:"#131D35",
@@ -74,11 +75,10 @@ function QuizModule() {
     if (!tema.trim()) return;
     setLoading(true); setQ(null); setRev(false); setSel(null);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:`Questão ENEM sobre "${tema}" em "${area.label}". APENAS JSON:\n{"enunciado":"...","alternativas":["A) ...","B) ...","C) ...","D) ...","E) ..."],"correta":0,"explicacao":"...","dificuldade":"Fácil|Média|Difícil"}`}]}),
+      const d = await callAI({
+        messages: [{ role: "user", content: `Questão ENEM sobre "${tema}" em "${area.label}". APENAS JSON:\n{"enunciado":"...","alternativas":["A) ...","B) ...","C) ...","D) ...","E) ..."],"correta":0,"explicacao":"...","dificuldade":"Fácil|Média|Difícil"}` }],
+        modulo: 'quiz',
       });
-      const d = await res.json();
       const p = JSON.parse(d.content[0].text.replace(/```json|```/g,"").trim());
       setQ({...p, xp:p.dificuldade==="Difícil"?200:p.dificuldade==="Média"?150:100, id:Date.now()});
     } catch {

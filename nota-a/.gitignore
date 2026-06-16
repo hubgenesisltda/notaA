@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Variáveis de ambiente — nunca commitar
+.env
+.env.*
+!.env.example
