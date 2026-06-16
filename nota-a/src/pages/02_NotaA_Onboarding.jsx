@@ -1,4 +1,5 @@
 import { useState } from "react";
+import NavBar from "../components/NavBar.jsx";
 
 // ============================================================
 // NOTA A — ONBOARDING COGNITIVO
@@ -251,16 +252,7 @@ export default function Onboarding({ onComplete }) {
             </button>
           </div>
 
-          {/* NavBar */}
-          <nav style={{ position:"fixed", bottom:0, left:0, right:0, background:`${C.surface}F0`, backdropFilter:"blur(12px)", borderTop:`1px solid ${C.border}`, display:"flex", maxWidth:480, margin:"0 auto" }}>
-            {[["🏠","Início",true],["⚡","Praticar",false],["✍️","Redação",false],["📊","Turma",false],["👤","Perfil",false]].map(([icon,label,active])=>(
-              <button key={label} style={{ flex:1, padding:"10px 0 7px", border:"none", background:"transparent", cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", gap:2, transition:"all .2s" }}>
-                <span style={{ fontSize:18, opacity:active?1:.3 }}>{icon}</span>
-                <span style={{ fontSize:9, fontWeight:active?800:500, color:active?C.primary:C.muted, fontFamily:"'Syne',sans-serif" }}>{label}</span>
-                {active && <div style={{ width:18, height:2, borderRadius:99, background:C.primary }} />}
-              </button>
-            ))}
-          </nav>
+          <NavBar active="inicio" />
         </div>
       </>
     );

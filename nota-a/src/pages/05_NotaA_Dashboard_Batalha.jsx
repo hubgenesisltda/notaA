@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import NavBar from "../components/NavBar.jsx";
 
 const C = {
   bg: "#07090F", surface: "#0E1420", card: "#131C2E", border: "#1A2640",
@@ -359,9 +360,10 @@ export default function DashboardBatalha() {
           </div>
         </div>
       </div>
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 20px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 20px 80px" }}>
         {modo === "dashboard" ? <DashboardModule /> : <BatalhaColetiva />}
       </div>
+      <NavBar active="turma" />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import NavBar from "../components/NavBar.jsx";
 
 // ============================================================
 // NOTA A — MÓDULO DO ESTUDANTE
@@ -443,6 +444,7 @@ export default function ModuloEstudante() {
           </div>
         </div>
       )}
+      <NavBar active="perfil" />
     </div>
   );
 }

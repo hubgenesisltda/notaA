@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import NavBar from "../components/NavBar.jsx";
 
 const C = {
   bg:"#03050E", surface:"#070B18", card:"#0A0F20", border:"#131D35",
@@ -295,9 +296,10 @@ export default function QuizBatalha() {
             </div>
           </div>
         </div>
-        <div style={{maxWidth:480,margin:"0 auto",padding:"20px 20px 60px"}} className="fu">
+        <div style={{maxWidth:480,margin:"0 auto",padding:"20px 20px 80px"}} className="fu">
           {modo==="quiz" ? <QuizModule/> : <BatalhaModule/>}
         </div>
+        <NavBar active="praticar" />
       </div>
     </>
   );

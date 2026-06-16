@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import NavBar from "../components/NavBar.jsx";
 
 const C = {
   bg: "#07090F", surface: "#0E1420", card: "#131C2E", border: "#1A2640",
@@ -309,9 +310,12 @@ export default function ModuloEstudo() {
           </div>
         </div>
       </div>
-      {modo === "redacao" && <RedacaoModule />}
-      {modo === "simulado" && <SimuladoModule />}
-      {modo === "socratica" && <SocraticaModule />}
+      <div style={{ paddingBottom: 80 }}>
+        {modo === "redacao" && <RedacaoModule />}
+        {modo === "simulado" && <SimuladoModule />}
+        {modo === "socratica" && <SocraticaModule />}
+      </div>
+      <NavBar active="redacao" />
     </div>
   );
 }

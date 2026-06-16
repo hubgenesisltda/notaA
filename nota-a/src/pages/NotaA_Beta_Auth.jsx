@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { createClient } from '@supabase/supabase-js';
 
 // ═══════════════════════════════════════════════════════════════════
 // NOTA A BETA — AUTENTICAÇÃO
@@ -28,94 +29,12 @@ button,input,select,textarea{font-family:inherit;cursor:pointer;border:none;back
 .shake{animation:shake .3s ease;}
 `;
 
-// ── Supabase client leve (sem npm, funciona no Artifacts) ──────────
-// Em produção: usar @supabase/supabase-js
-// Aqui: implementação mínima para validação da UX
-
-const SUPABASE_URL = 'https://seu-projeto.supabase.co';
-const SUPABASE_ANON_KEY = 'sua-chave-anon-aqui';
-
-// Mock do cliente Supabase para ambiente de validação
-class SupabaseMock {
-  constructor() {
-    this._users = JSON.parse(localStorage.getItem('nota_a_users') || '{}');
-    this._session = JSON.parse(localStorage.getItem('nota_a_session') || 'null');
-  }
-
-  _save() {
-    localStorage.setItem('nota_a_users', JSON.stringify(this._users));
-    localStorage.setItem('nota_a_session', JSON.stringify(this._session));
-  }
-
-  async signUp({ email, password, options }) {
-    await new Promise(r => setTimeout(r, 1200)); // simula latência de rede
-    if (this._users[email]) return { error: { message: 'Este e-mail já está cadastrado.' } };
-    const user = {
-      id: `usr_${Date.now()}`,
-      email,
-      created_at: new Date().toISOString(),
-      user_metadata: options?.data || {},
-    };
-    this._users[email] = { ...user, password: btoa(password) };
-    this._session = { user, access_token: `tok_${Date.now()}` };
-    this._save();
-    return { data: { user, session: this._session }, error: null };
-  }
-
-  async signInWithPassword({ email, password }) {
-    await new Promise(r => setTimeout(r, 900));
-    const stored = this._users[email];
-    if (!stored || stored.password !== btoa(password)) {
-      return { error: { message: 'E-mail ou senha incorretos.' } };
-    }
-    const user = { ...stored };
-    delete user.password;
-    this._session = { user, access_token: `tok_${Date.now()}` };
-    this._save();
-    return { data: { user, session: this._session }, error: null };
-  }
-
-  async signInWithOAuth({ provider }) {
-    await new Promise(r => setTimeout(r, 800));
-    // Mock: simula login Google
-    const email = 'usuario@gmail.com';
-    const user = {
-      id: `usr_google_${Date.now()}`,
-      email,
-      created_at: new Date().toISOString(),
-      user_metadata: { full_name: 'Usuário Google', avatar_url: null, provider: 'google' },
-    };
-    this._users[email] = user;
-    this._session = { user, access_token: `tok_${Date.now()}` };
-    this._save();
-    return { data: { user, session: this._session }, error: null };
-  }
-
-  async resetPasswordForEmail(email) {
-    await new Promise(r => setTimeout(r, 700));
-    if (!this._users[email]) return { error: { message: 'E-mail não encontrado.' } };
-    return { data: {}, error: null };
-  }
-
-  async signOut() {
-    this._session = null;
-    this._save();
-    return { error: null };
-  }
-
-  getSession() { return { data: { session: this._session } }; }
-}
-
-/* import { createClient } from '@supabase/supabase-js';
+// ── Supabase client ───────────────────────────────────────────────
+console.log('[DEBUG ENV]', import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_ANON_KEY
-); 
-
-passo 4 do claude --- substituir após jó testar
-*/
-
-const supabase = new SupabaseMock();
+);
 
 // ── Primitivos UI ─────────────────────────────────────────────────
 function Spin() {
@@ -252,7 +171,7 @@ function Cadastro({ onSuccess, onLogin }) {
       return;
     }
     setLoading(true);
-    const { data, error } = await supabase.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: f.email,
       password: f.senha,
       options: { data: { full_name: f.nome, tipo_perfil: f.tipoPerfil } },
@@ -264,10 +183,9 @@ function Cadastro({ onSuccess, onLogin }) {
 
   const handleGoogle = async () => {
     setLoadingGoogle(true);
-    const { data, error } = await supabase.signInWithOAuth({ provider: 'google' });
-    setLoadingGoogle(false);
-    if (error) { setErrors({ email: error.message }); return; }
-    onSuccess(data.user, 'estudante');
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+    if (error) { setLoadingGoogle(false); setErrors({ email: error.message }); }
+    // em caso de sucesso o Supabase redireciona para o Google automaticamente
   };
 
   const PERFIS = [
@@ -352,7 +270,7 @@ function Login({ onSuccess, onCadastro, onRecuperar }) {
     }
     if (!senha) { setErrors({ senha: 'Informe sua senha.' }); return; }
     setLoading(true);
-    const { data, error } = await supabase.signInWithPassword({ email, password: senha });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
     setLoading(false);
     if (error) { setErrors({ senha: error.message }); return; }
     onSuccess(data.user, data.user.user_metadata?.tipo_perfil || 'estudante');
@@ -360,10 +278,9 @@ function Login({ onSuccess, onCadastro, onRecuperar }) {
 
   const handleGoogle = async () => {
     setLoadingGoogle(true);
-    const { data, error } = await supabase.signInWithOAuth({ provider: 'google' });
-    setLoadingGoogle(false);
-    if (error) { setErrors({ senha: error.message }); return; }
-    onSuccess(data.user, 'estudante');
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+    if (error) { setLoadingGoogle(false); setErrors({ senha: error.message }); }
+    // em caso de sucesso o Supabase redireciona para o Google automaticamente
   };
 
   return (
@@ -402,7 +319,7 @@ function Recuperar({ onVoltar }) {
   const handleSubmit = async () => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('E-mail inválido.'); return; }
     setLoading(true);
-    const { error: err } = await supabase.resetPasswordForEmail(email);
+    const { error: err } = await supabase.auth.resetPasswordForEmail(email);
     setLoading(false);
     if (err) { setError(err.message); return; }
     setSent(true);
@@ -478,14 +395,15 @@ export default function NotaAAuth({ onAuthenticated }) {
   const [user, setUser]           = useState(null);
   const [tipoPerfil, setTipoPerfil] = useState('estudante');
 
-  // Verificar sessão existente ao montar
+  // Verificar sessão existente ao montar (inclui retorno pós-OAuth)
   useEffect(() => {
-    const { data } = supabase.getSession();
-    if (data.session?.user) {
-      const u = data.session.user;
-      const tp = u.user_metadata?.tipo_perfil || 'estudante';
-      onAuthenticated?.(u, tp);
-    }
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        const u = data.session.user;
+        const tp = u.user_metadata?.tipo_perfil || 'estudante';
+        onAuthenticated?.(u, tp);
+      }
+    });
   }, []);
 
   const handleSuccess = useCallback((u, tp) => {
