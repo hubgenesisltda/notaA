@@ -82,11 +82,12 @@ function QuizModule() {
       const p = JSON.parse(d.content[0].text.replace(/```json|```/g,"").trim());
       setQ({...p, xp:p.dificuldade==="Difícil"?200:p.dificuldade==="Média"?150:100, id:Date.now()});
     } catch {
-      setQ({...SAMPLES[area.id]||SAMPLES.mat, id:Date.now()});
+      console.error("erro ao chamar ia");
+      console.log(import.meta.env.VITE_GEMINI_API_KEY);
     }
     setLoading(false);
   };
-
+  
   const resp = (i) => {
     if (rev || !q) return;
     setSel(i); setRev(true);
