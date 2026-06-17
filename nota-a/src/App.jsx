@@ -1,5 +1,6 @@
 import React from 'react'
 import {Routes, Route } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import Landing from './pages/01_NotaA_Landing.jsx'
 import Onboarding from './pages/02_NotaA_Onboarding.jsx'
 import QuizBatalha from './pages/03_NotaA_Quiz_Batalha.jsx'
@@ -11,10 +12,12 @@ import PortalEscola from './pages/08_NotaA_Escola.jsx'
 import ModuloEstudante from './pages/09_NotaA_Estudante.jsx'
 import NotaAAuth from './pages/NotaA_Beta_Auth.jsx'
 
-function App() {
+
+
+function App() {const navigate = useNavigate();
   return (
     <Routes>
-        <Route path="/" element={<Landing onLogin="/login" />} />
+        <Route path="/" element={<Landing onLogin={() => navigate('/login')} />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/quiz" element={<QuizBatalha />} />
         <Route path="/estudo" element={<ModuloEstudo />} />
@@ -23,7 +26,7 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/escola" element={<PortalEscola />} />
         <Route path="/estudante" element={<ModuloEstudante />} />
-        <Route path="/login" element={<NotaAAuth />} />
+        <Route path="/login" element={<NotaAAuth onAuthenticated={() => navigate('/onboarding')} />} />
       </Routes>
   )
 }

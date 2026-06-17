@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import NavBar from "../components/NavBar.jsx";
+import { callAI } from "../lib/aiClient.js";
 
 const C = {
   bg: "#07090F", surface: "#0E1420", card: "#131C2E", border: "#1A2640",
@@ -202,8 +204,11 @@ function SocraticaModule() {
     if (!tema.trim()) return;
     setStarted(true); setLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 250, system: `Você é uma IA Socrática especialista em ENEM. NUNCA dê a resposta direta. Faça perguntas que guiem o aluno a descobrir o conhecimento sozinho. Método socrático. Tema: ${tema}. Máximo 3 linhas.`, messages: [{ role: "user", content: `Quero aprender sobre ${tema}` }] }) });
-      const d = await res.json();
+      const d = await callAI({
+        system: `Você é uma IA Socrática especialista em ENEM. NUNCA dê a resposta direta. Faça perguntas que guiem o aluno a descobrir o conhecimento sozinho. Método socrático. Tema: ${tema}. Máximo 3 linhas.`,
+        messages: [{ role: "user", content: `Quero aprender sobre ${tema}` }],
+        modulo: 'socratica',
+      });
       setMsgs([{ role: "ai", text: d.content[0].text }]);
     } catch {
       setMsgs([{ role: "ai", text: `Que bom que quer aprender sobre ${tema}! Antes de explicar, me diga: o que você já sabe ou imagina sobre esse assunto?` }]);
@@ -216,8 +221,11 @@ function SocraticaModule() {
     const nm = [...msgs, { role: "user", text: inp }];
     setMsgs(nm); setInp(""); setLoading(true);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 200, system: `IA Socrática sobre "${tema}". NUNCA responda diretamente. Sempre faça uma pergunta que provoque o raciocínio. Máximo 2 linhas.`, messages: nm.map(m => ({ role: m.role === "ai" ? "assistant" : "user", content: m.text })) }) });
-      const d = await res.json();
+      const d = await callAI({
+        system: `IA Socrática sobre "${tema}". NUNCA responda diretamente. Sempre faça uma pergunta que provoque o raciocínio. Máximo 2 linhas.`,
+        messages: nm.map(m => ({ role: m.role === "ai" ? "assistant" : "user", content: m.text })),
+        modulo: 'socratica',
+      });
       setMsgs(p => [...p, { role: "ai", text: d.content[0].text }]);
     } catch {
       setMsgs(p => [...p, { role: "ai", text: "Interessante perspectiva! Consegue pensar em um exemplo prático disso no seu cotidiano?" }]);
@@ -309,9 +317,12 @@ export default function ModuloEstudo() {
           </div>
         </div>
       </div>
-      {modo === "redacao" && <RedacaoModule />}
-      {modo === "simulado" && <SimuladoModule />}
-      {modo === "socratica" && <SocraticaModule />}
+      <div style={{ paddingBottom: 80 }}>
+        {modo === "redacao" && <RedacaoModule />}
+        {modo === "simulado" && <SimuladoModule />}
+        {modo === "socratica" && <SocraticaModule />}
+      </div>
+      <NavBar active="redacao" />
     </div>
   );
 }
@@ -359,16 +370,10 @@ Responda APENAS com JSON válido neste formato:
   "nivel": "Iniciante|Intermediário|Avançado|Expert"
 }`;
 
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          messages: [{ role: "user", content: prompt }],
-        }),
+      const data = await callAI({
+        messages: [{ role: "user", content: prompt }],
+        modulo: 'redacao',
       });
-      const data = await res.json();
       const raw = data.content?.map(c => c.text || "").join("").trim();
       const clean = raw.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);

@@ -27,6 +27,8 @@ const MAX_TOKENS_POR_MODULO = {
   redacao:   1000,
   insight:   400,
   simulado:  600,
+  previsao:  800,
+  narrativa: 800,
   default:   800,
 };
 
