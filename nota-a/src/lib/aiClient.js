@@ -1,4 +1,4 @@
-const MODEL   = 'gemini-2.0-flash';
+const MODEL   = 'gemini-2.5-flash';
 const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 const MAX_TOKENS = {
@@ -15,11 +15,14 @@ const MAX_TOKENS = {
 class GeminiClient {
   constructor(model = MODEL) {
     this.model = model;
+    this.apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!this.apiKey) {
+      console.error('[GeminiClient] VITE_GEMINI_API_KEY não está definida no .env');
+    }
   }
 
   async call({ messages, system, modulo = 'default' }) {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    if (!apiKey) throw new Error('VITE_GEMINI_API_KEY não configurada.');
+    if (!this.apiKey) throw new Error('VITE_GEMINI_API_KEY não configurada.');
 
     // Anthropic format → Gemini format
     let contents = messages.map(m => ({
@@ -38,24 +41,35 @@ class GeminiClient {
       },
     };
 
-    if (system) {
+    if (system?.trim()) {
       body.systemInstruction = { parts: [{ text: system }] };
     }
 
-    const res = await fetch(
-      `${BASE_URL}/${this.model}:generateContent?key=${apiKey}`,
-      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
-    );
+    let res;
+    try {
+      res = await fetch(
+        `${BASE_URL}/${this.model}:generateContent?key=${this.apiKey}`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+      );
+    } catch (networkErr) {
+      console.error('[GeminiClient] Erro de rede:', networkErr);
+      throw networkErr;
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
+      const msg = err.error?.message || `HTTP ${res.status}`;
+      console.error('[GeminiClient] Erro da API Gemini:', msg, err);
+      throw new Error(msg);
     }
 
     const data = await res.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
 
-    // Retorna no mesmo formato que o frontend já espera (content[0].text)
+    if (!text) {
+      console.warn('[GeminiClient] Resposta vazia. Candidatos recebidos:', JSON.stringify(data.candidates));
+    }
+
     return { content: [{ type: 'text', text }] };
   }
 }
