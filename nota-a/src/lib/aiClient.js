@@ -1,4 +1,4 @@
-const MODEL   = 'gemini-2.5-flash';
+const MODEL   = 'gemini-3.1-flash-lite';
 const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 const MAX_TOKENS = {
