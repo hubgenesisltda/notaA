@@ -263,12 +263,10 @@ function Login({ onSuccess, onCadastro, onRecuperar }) {
   const [loadingGoogle, setLoadingGoogle] = useState(false);
 
   const handleSubmit = async () => {
-    const errs = validate({ email, senha: senha.length >= 1 ? 'ok' : '' });
+    const errs = {};
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'E-mail inválido.';
     if (!senha) errs.senha = 'Informe sua senha.';
-    if (Object.keys(errs).length > (errs.senha === 'Informe sua senha.' ? 1 : 0)) {
-      setErrors(errs); return;
-    }
-    if (!senha) { setErrors({ senha: 'Informe sua senha.' }); return; }
+    if (Object.keys(errs).length) { setErrors(errs); return; }
     setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
     setLoading(false);
