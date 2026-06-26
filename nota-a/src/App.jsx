@@ -26,7 +26,11 @@ function App() {const navigate = useNavigate();
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/escola" element={<PortalEscola />} />
         <Route path="/estudante" element={<ModuloEstudante />} />
-        <Route path="/login" element={<NotaAAuth onAuthenticated={() => navigate('/onboarding')} />} />
+        <Route path="/login" element={<NotaAAuth onAuthenticated={(user, tipoPerfil) => {
+          if (tipoPerfil === 'professor') navigate('/dashboard');
+          else if (tipoPerfil === 'escola') navigate('/escola');
+          else navigate('/onboarding');
+        }} />} />
       </Routes>
   )
 }
